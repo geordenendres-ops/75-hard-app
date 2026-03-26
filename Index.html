@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="75 Hard">
+<meta name="theme-color" content="#07070d">
+<link rel="manifest" id="pwa-manifest">
+<title>75 Hard Accountability</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;700;800;900&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:       #07070d;
+  --surface:  #0d0d1a;
+  --surface2: #141425;
+  --border:   rgba(255,255,255,0.07);
+  --border2:  rgba(255,255,255,0.13);
+  --text:     #ededfa;
+  --muted:    rgba(237,237,250,0.45);
+  --dim:      rgba(237,237,250,0.2);
+  --green:    #00e87a;
+  --green-bg: rgba(0,232,122,0.12);
+  --amber:    #ffb800;
+  --amber-bg: rgba(255,184,0,0.12);
+  --red:      #ff2d55;
+  --red-bg:   rgba(255,45,85,0.12);
+  --blue:     #4a9fff;
+  --blue-bg:  rgba(74,159,255,0.12);
+  --r:        16px;
+  --r-sm:     10px;
+  --tab:      72px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
+#root{height:100%;display:flex;justify-content:center;background:var(--bg)}
+
+.app{width:100%;max-width:430px;height:100%;display:flex;flex-direction:column}
+
+/* HEADER */
+.hdr{padding:env(safe-area-inset-top,44px) 18px 12px;background:rgba(7,7,13,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.hdr-logo{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:900;letter-spacing:0.04em;text-transform:uppercase}
+.hdr-logo em{color:var(--green);font-style:normal}
+.hdr-right{display:flex;align-items:center;gap:8px}
+.hdr-name{font-size:13px;color:var(--muted);font-weight:500}
+.pill{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+.pill.on-track{background:var(--green-bg);color:var(--green)}
+.pill.at-risk{background:var(--amber-bg);color:var(--amber);animation:pulse-a 1.8s ease infinite}
+.pill.failed{background:var(--red-bg);color:var(--red);animation:pulse-r 1.8s ease infinite}
+.pill.completed{background:var(--green-bg);color:var(--green)}
+@keyframes pulse-a{0%,100%{opacity:1}50%{opacity:.6}}
+@keyframes pulse-r{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* SCROLL */
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(var(--tab) + env(safe-area-inset-bottom,16px) + 14px);scrollbar-width:none}
+.content::-webkit-scrollbar{display:none}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+
+/* HERO */
+.hero{padding:18px 18px 14px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 110% 0%,rgba(0,232,122,0.06) 0%,transparent 65%);pointer-events:none}
+.hero-day{font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.hero-num{font-family:'Barlow Condensed',sans-serif;font-size:62px;font-weight:900;line-height:1;letter-spacing:-0.02em}
+.hero-num sub{font-size:22px;font-weight:600;color:var(--muted);vertical-align:middle}
+.hero-right{position:absolute;right:18px;top:18px;text-align:right}
+.hero-pct{font-family:'Barlow Condensed',sans-serif;font-size:44px;font-weight:900;line-height:1}
+.hero-pct-lbl{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-top:2px}
+.hero-status{display:inline-block;margin-top:6px;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:3px 8px;border-radius:6px}
+.bar-bg{background:var(--surface2);border-radius:6px;height:5px;margin-top:14px;overflow:hidden}
+.bar-fill{height:100%;border-radius:6px;transition:width .4s ease}
+
+/* TASK */
+.task{display:flex;align-items:center;gap:14px;padding:15px;cursor:pointer;transition:background .12s;user-select:none;-webkit-user-select:none}
+.task:active{background:var(--surface2)}
+.chk{width:30px;height:30px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .18s ease}
+.chk.done{background:var(--green);border-color:var(--green);color:#000}
+.task-info{flex:1;min-width:0}
+.task-name{font-size:15px;font-weight:600;margin-bottom:2px;transition:color .15s}
+.task-name.done{color:var(--muted);text-decoration:line-through}
+.task-meta{font-size:11px;color:var(--muted);line-height:1.4}
+.task-icon{flex-shrink:0;font-size:18px}
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;flex-shrink:0;letter-spacing:0.04em}
+.badge.done{background:var(--green-bg);color:var(--green)}
+.badge.todo{background:var(--blue-bg);color:var(--blue)}
+
+/* WATER */
+.water-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.water-lhs{display:flex;align-items:center;gap:10px}
+.water-title{font-size:15px;font-weight:600}
+.water-big{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;line-height:1}
+.water-big sub{font-size:13px;font-weight:500;color:var(--muted);vertical-align:middle}
+.water-rem{font-size:11px;color:var(--muted);margin-top:2px;text-align:right}
+.wbar-bg{background:var(--surface2);border-radius:8px;height:10px;margin-bottom:12px;overflow:hidden}
+.wbar-fill{height:100%;border-radius:8px;background:linear-gradient(90deg,#4a9fff 0%,#00e87a 100%);transition:width .35s ease}
+.w-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.w-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);color:var(--text);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;padding:10px 0;cursor:pointer;transition:all .12s;text-align:center}
+.w-btn:active{background:var(--blue-bg);border-color:var(--blue)}
+.w-btn.rst{color:var(--red);font-size:12px}
+
+/* WHAT'S LEFT */
+.wl-title{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.wl-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:3px 0}
+.wl-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0}
+.done-msg{font-size:14px;font-weight:600;color:var(--green)}
+
+/* COUNTDOWN */
+.cdown{text-align:center;padding:20px}
+.cdown-lbl{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.cdown-time{font-family:'Barlow Condensed',sans-serif;font-size:56px;font-weight:900;line-height:1;letter-spacing:0.01em}
+.cdown-sub{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5}
+
+/* SECTION LABEL */
+.sec-lbl{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;padding-left:2px}
+
+/* CREW */
+.crew-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
+.crew-name{font-size:16px;font-weight:600;display:flex;align-items:center;gap:6px}
+.you-tag{font-size:9px;background:var(--blue-bg);color:var(--blue);padding:2px 7px;border-radius:10px;font-weight:700;letter-spacing:0.06em}
+.crew-pct{font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:900;line-height:1}
+.crew-row{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);padding:3px 0}
+.cdot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+
+/* INVITE */
+.invite{background:var(--surface);border:1px dashed var(--border2);border-radius:var(--r);padding:18px;text-align:center;margin-bottom:10px}
+.invite-sub{font-size:13px;color:var(--muted);margin-bottom:10px}
+.invite-code{background:var(--surface2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:17px;letter-spacing:.18em;color:var(--green);font-weight:700}
+.invite-note{font-size:11px;color:var(--dim);margin-top:8px}
+
+/* SETTINGS */
+.s-section{margin-bottom:22px}
+.s-label{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:9px;padding-left:2px}
+.s-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 15px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.s-row-lbl{font-size:15px;font-weight:500}
+.s-row-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.s-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s;margin-top:8px}
+.s-input:focus{border-color:var(--green)}
+
+/* SETUP */
+.setup{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 24px;text-align:center;overflow-y:auto}
+.setup-logo{font-family:'Barlow Condensed',sans-serif;font-size:80px;font-weight:900;letter-spacing:-.02em;line-height:.88;margin-bottom:6px}
+.setup-logo em{color:var(--green);font-style:normal}
+.setup-sub{font-size:15px;color:var(--muted);margin-bottom:36px;line-height:1.6;max-width:280px}
+.setup-form{width:100%;max-width:340px;text-align:left}
+.field-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px;margin-top:16px}
+.field{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 15px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s;margin-bottom:2px}
+.field:focus{border-color:var(--green)}
+.field-hint{font-size:11px;color:var(--dim);margin-bottom:4px}
+.go-btn{width:100%;background:var(--green);color:#000;border:none;border-radius:var(--r-sm);padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:24px;transition:opacity .15s,transform .1s}
+.go-btn:active{opacity:.85;transform:scale(.98)}
+
+/* TAB BAR */
+.tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(7,7,13,0.94);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,10px);height:var(--tab);z-index:100}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:none;border:none;color:var(--dim);transition:color .15s;padding-top:8px;font-family:'DM Sans',sans-serif}
+.tab-btn.active{color:var(--green)}
+.tab-btn svg{width:22px;height:22px}
+.tab-btn span{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+
+/* ANIMS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .28s ease both}
+
+.footer-note{text-align:center;font-size:11px;color:var(--dim);padding:12px 0 4px;line-height:1.9}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<script type="text/babel">
+const { useState, useEffect } = React;
+
+/* ── UTILITIES ── */
+
+function getETNow() {
+  return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
+}
+
+function getTodayKey() {
+  const et = getETNow();
+  return [et.getFullYear(), String(et.getMonth()+1).padStart(2,'0'), String(et.getDate()).padStart(2,'0')].join('-');
+}
+
+function getCurrentDay(startDate) {
+  if (!startDate) return 1;
+  const start = new Date(startDate + 'T00:00:00');
+  start.setHours(0,0,0,0);
+  const today = getETNow();
+  today.setHours(0,0,0,0);
+  const diff = Math.round((today - start) / 86400000) + 1;
+  return Math.min(Math.max(diff, 1), 75);
+}
+
+function getMinsUntilMidnight() {
+  const et = getETNow();
+  return (23 - et.getHours()) * 60 + (60 - et.getMinutes()) - 1;
+}
+
+function getPct(p) {
+  const done = [p.workout1, p.workout2, p.waterOz >= 128, p.reading, p.cleanEating].filter(Boolean).length;
+  return Math.round((done / 5) * 100);
+}
+
+function getStatus(p) {
+  if (p.workout1 && p.workout2 && p.waterOz >= 128 && p.reading && p.cleanEating) return 'completed';
+  const mins = getMinsUntilMidnight();
+  let needed = 0;
+  if (!p.workout1) needed += 45;
+  if (!p.workout2) needed += 45;
+  if (!p.reading)  needed += 20;
+  if (needed > mins) return 'failed';
+  const etH = getETNow().getHours();
+  if (mins < 240 && (needed > 0 || p.waterOz < 128)) return 'at-risk';
+  if (etH >= 18 && (needed > 0 || p.waterOz < 128)) return 'at-risk';
+  return 'on-track';
+}
+
+const STATUS_LABEL = { 'on-track':'On Track','at-risk':'At Risk','failed':'Failed','completed':'Completed' };
+const STATUS_COLOR = { 'on-track':'var(--green)','at-risk':'var(--amber)','failed':'var(--red)','completed':'var(--green)' };
+
+function fmtCountdown(totalMins) {
+  const h = Math.floor(totalMins / 60), m = totalMins % 60;
+  if (h > 0) return `${h}h ${String(m).padStart(2,'0')}m`;
+  return `${m}m`;
+}
+
+function ls(key, fallback) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
+  catch { return fallback; }
+}
+
+function getCrewData(etHour) {
+  return [
+    { id:'steve',   name:'Steve',   workout1:true,         workout2:etHour>=17,   waterOz:Math.min(128,24+etHour*5), reading:etHour>=19,  cleanEating:true },
+    { id:'madison', name:'Madison', workout1:true,         workout2:true,         waterOz:128,                       reading:true,         cleanEating:true },
+    { id:'kyle',    name:'Kyle',    workout1:etHour>=9,    workout2:false,        waterOz:Math.min(72,etHour*3),     reading:false,        cleanEating:etHour>=11 },
+  ];
+}
+
+/* ── CHECK ICON ── */
+const Check = () => (
+  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="20 6 9 17 4 12"/>
+  </svg>
+);
+
+/* ── TASK CARD ── */
+function TaskCard({ emoji, name, meta, done, onToggle, delay=0 }) {
+  return (
+    <div className="card fade-in" style={{ animationDelay:`${delay}ms` }}>
+      <div className="task" onClick={onToggle}>
+        <div className={`chk${done?' done':''}`}>{done && <Check/>}</div>
+        <div className="task-info">
+          <div className={`task-name${done?' done':''}`}>{name}</div>
+          {meta && <div className="task-meta">{meta}</div>}
+        </div>
+        <span className="task-icon">{emoji}</span>
+        <span className={`badge${done?' done':' todo'}`}>{done ? '✓ Done' : 'Pending'}</span>
+      </div>
+    </div>
+  );
+}
+
+/* ── WATER CARD ── */
+function WaterCard({ oz, onAdd, onReset }) {
+  const pct = Math.min((oz / 128) * 100, 100);
+  const done = oz >= 128;
+  return (
+    <div className="card fade-in" style={{ animationDelay:'80ms', padding:'15px' }}>
+      <div className="water-hdr">
+        <div className="water-lhs">
+          <span style={{ fontSize:20 }}>💧</span>
+          <span className="water-title">Water</span>
+        </div>
+        <div style={{ textAlign:'right' }}>
+          <div className="water-big" style={{ color:done?'var(--green)':'var(--text)' }}>
+            {oz}<sub> / 128 oz</sub>
+          </div>
+          <div className="water-rem">{done ? '✓ Goal reached!' : `${128-oz} oz left`}</div>
+        </div>
+      </div>
+      <div className="wbar-bg"><div className="wbar-fill" style={{ width:`${pct}%` }}/></div>
+      <div className="w-btns">
+        {[8,16,32].map(a => <button key={a} className="w-btn" onClick={() => onAdd(a)}>+{a} oz</button>)}
+        <button className="w-btn rst" onClick={onReset}>Reset</button>
+      </div>
+    </div>
+  );
+}
+
+/* ── HERO CARD ── */
+function HeroCard({ day, pct, status }) {
+  const color = STATUS_COLOR[status];
+  return (
+    <div className="card hero fade-in">
+      <div className="hero-day">Challenge Progress</div>
+      <div className="hero-num" style={{ color }}>{day}<sub> / 75</sub></div>
+      <div className="hero-right">
+        <div className="hero-pct" style={{ color }}>{pct}%</div>
+        <div className="hero-pct-lbl">Today</div>
+        <div className="hero-status" style={{ background:`${color}1a`, color }}>{STATUS_LABEL[status]}</div>
+      </div>
+      <div className="bar-bg"><div className="bar-fill" style={{ width:`${pct}%`, background:color }}/></div>
+    </div>
+  );
+}
+
+/* ── WHAT'S LEFT ── */
+function WhatsLeft({ p }) {
+  const items = [];
+  if (!p.workout1)   items.push('Workout 1 — 45 min');
+  if (!p.workout2)   items.push('Workout 2 — 45 min');
+  if (p.waterOz<128) items.push(`Water — ${128-p.waterOz} oz remaining`);
+  if (!p.reading)    items.push('Reading — 10 pages / 20 min audiobook');
+  if (!p.cleanEating) items.push('Clean Eating & No Bad Habits');
+  return (
+    <div className="card fade-in" style={{ padding:'15px', animationDelay:'160ms' }}>
+      <div className="wl-title">What's Left Today</div>
+      {items.length === 0
+        ? <div className="done-msg">🎉 All done! Day complete.</div>
+        : items.map((it,i) => <div key={i} className="wl-item"><div className="wl-dot"/><span>{it}</span></div>)
+      }
+    </div>
+  );
+}
+
+/* ── COUNTDOWN CARD ── */
+function CountdownCard({ status }) {
+  const [mins, setMins] = useState(getMinsUntilMidnight());
+  useEffect(() => {
+    const id = setInterval(() => setMins(getMinsUntilMidnight()), 20000);
+    return () => clearInterval(id);
+  }, []);
+  const color = status==='failed'?'var(--red)':status==='completed'?'var(--green)':'var(--amber)';
+  const msgs = {
+    failed:    '⛔ Not enough time remaining. This day is a loss — reset tomorrow.',
+    completed: '✅ Day complete! Enjoy your evening.',
+    'at-risk': '⚠️ Getting tight. Finish your remaining tasks now.',
+    'on-track':'Stay disciplined. You have time — use it wisely.',
+  };
+  return (
+    <div className="card fade-in" style={{ borderColor:color, animationDelay:'200ms' }}>
+      <div className="cdown">
+        <div className="cdown-lbl">Until Midnight ET</div>
+        <div className="cdown-time" style={{ color }}>{fmtCountdown(mins)}</div>
+        <div className="cdown-sub">{msgs[status]}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── MY DAY TAB ── */
+function MyDayTab({ progress, setProgress, currentDay }) {
+  const etH = getETNow().getHours();
+  const status = getStatus(progress);
+  const pct = getPct(progress);
+  return (
+    <div className="content">
+      <HeroCard day={currentDay} pct={pct} status={status}/>
+      <div className="sec-lbl">Daily Tasks</div>
+      <TaskCard emoji="🏋️" name="Workout 1" meta="45 minutes · any exercise"
+        done={progress.workout1} onToggle={() => setProgress(p => ({...p, workout1:!p.workout1}))} delay={0}/>
+      <TaskCard emoji="🌿" name="Workout 2" meta="45 minutes · outdoors preferred"
+        done={progress.workout2} onToggle={() => setProgress(p => ({...p, workout2:!p.workout2}))} delay={40}/>
+      <WaterCard oz={progress.waterOz}
+        onAdd={oz => setProgress(p => ({...p, waterOz:p.waterOz+oz}))}
+        onReset={() => setProgress(p => ({...p, waterOz:0}))}/>
+      <TaskCard emoji="📖" name="Reading" meta="10 pages or 20 min audiobook · nonfiction only"
+        done={progress.reading} onToggle={() => setProgress(p => ({...p, reading:!p.reading}))} delay={80}/>
+      <TaskCard emoji="🛡️" name="Clean Eating & No Bad Habits" meta="No cheat meals · no alcohol · stay disciplined"
+        done={progress.cleanEating} onToggle={() => setProgress(p => ({...p, cleanEating:!p.cleanEating}))} delay={110}/>
+      <WhatsLeft p={progress}/>
+      {etH >= 18 && <CountdownCard status={status}/>}
+    </div>
+  );
+}
+
+/* ── CREW CARD ── */
+function CrewCard({ member, isYou }) {
+  const pct = getPct(member);
+  const status = getStatus(member);
+  const color = STATUS_COLOR[status];
+  const tasks = [
+    { label:'Workout 1',                      done:member.workout1 },
+    { label:'Workout 2',                      done:member.workout2 },
+    { label:`Water ${member.waterOz}/128 oz`, done:member.waterOz>=128 },
+    { label:'Reading',                         done:member.reading },
+    { label:'Clean Eating',                   done:member.cleanEating },
+  ];
+  return (
+    <div className="card fade-in" style={{ padding:'15px', borderLeft:`3px solid ${color}` }}>
+      <div className="crew-hdr">
+        <div className="crew-name">
+          {member.name}
+          {isYou && <span className="you-tag">YOU</span>}
+        </div>
+        <div style={{ textAlign:'right' }}>
+          <div className="crew-pct" style={{ color }}>{pct}%</div>
+          <div style={{ fontSize:10, fontWeight:700, letterSpacing:'.08em', textTransform:'uppercase', color }}>
+            {STATUS_LABEL[status]}
+          </div>
+        </div>
+      </div>
+      {tasks.map((t,i) => (
+        <div key={i} className="crew-row">
+          <div className="cdot" style={{ background:t.done?'var(--green)':'var(--surface2)', border:t.done?'none':'1px solid var(--border2)' }}/>
+          <span style={{ color:t.done?'var(--text)':'var(--muted)' }}>{t.label}{t.done?' ✓':''}</span>
+        </div>
+      ))}
+      <div className="bar-bg" style={{ marginTop:10 }}>
+        <div className="bar-fill" style={{ width:`${pct}%`, background:color }}/>
+      </div>
+    </div>
+  );
+}
+
+/* ── CREW TAB ── */
+function CrewTab({ userProgress, userName, currentDay }) {
+  const etH = getETNow().getHours();
+  const crew = getCrewData(etH);
+  const me = { id:'you', name:userName||'You', ...userProgress };
+  const all = [me, ...crew].sort((a,b) => getPct(b) - getPct(a));
+  return (
+    <div className="content">
+      <div style={{ marginBottom:14 }}>
+        <div className="sec-lbl" style={{ margin:0 }}>75 Hard Crew</div>
+        <div style={{ fontSize:12, color:'var(--muted)', marginTop:4 }}>
+          Day {currentDay} · Check back at 5 PM to see who still needs to hustle.
+        </div>
+      </div>
+      {all.map(m => <CrewCard key={m.id} member={m} isYou={m.id==='you'}/>)}
+      <div className="invite">
+        <div className="invite-sub">🔗 Invite friends to your crew</div>
+        <div className="invite-code">CREW-7X4M</div>
+        <div className="invite-note">Full multiplayer requires Supabase backend</div>
+      </div>
+    </div>
+  );
+}
+
+/* ── SETTINGS TAB ── */
+function SettingsTab({ userName, setUserName, currentDay, startDate, onReset }) {
+  return (
+    <div className="content">
+      <div className="s-section">
+        <div className="s-label">Your Profile</div>
+        <div className="s-row" style={{ flexDirection:'column', alignItems:'flex-start', gap:0 }}>
+          <div className="s-row-lbl">Display Name</div>
+          <input className="s-input" value={userName} onChange={e => setUserName(e.target.value)} placeholder="Your name"/>
+        </div>
+        <div className="s-row">
+          <div>
+            <div className="s-row-lbl">Challenge Day</div>
+            <div className="s-row-sub">Started {startDate || 'today'}</div>
+          </div>
+          <div style={{ fontFamily:"'Barlow Condensed',sans-serif", fontSize:24, fontWeight:800, color:'var(--green)' }}>{currentDay}</div>
+        </div>
+      </div>
+
+      <div className="s-section">
+        <div className="s-label">App Info</div>
+        <div className="s-row">
+          <div>
+            <div className="s-row-lbl">Countdown Timezone</div>
+            <div className="s-row-sub">All challenge logic uses Eastern Time</div>
+          </div>
+          <div style={{ fontWeight:700, fontSize:13, color:'var(--muted)' }}>ET</div>
+        </div>
+        <div className="s-row">
+          <div>
+            <div className="s-row-lbl">Add to Home Screen</div>
+            <div className="s-row-sub">Safari → Share → Add to Home Screen</div>
+          </div>
+          <span style={{ fontSize:18 }}>📱</span>
+        </div>
+        <div className="s-row">
+          <div>
+            <div className="s-row-lbl">Data Storage</div>
+            <div className="s-row-sub">Saved locally on this device</div>
+          </div>
+          <span style={{ fontSize:18 }}>💾</span>
+        </div>
+      </div>
+
+      <div className="s-section">
+        <div className="s-label">Danger Zone</div>
+        <div className="s-row" style={{ cursor:'pointer' }} onClick={onReset}>
+          <div>
+            <div className="s-row-lbl" style={{ color:'var(--red)' }}>Reset Challenge</div>
+            <div className="s-row-sub">Clears all data and starts over</div>
+          </div>
+          <span style={{ color:'var(--red)', fontSize:18 }}>→</span>
+        </div>
+      </div>
+
+      <div className="footer-note">
+        75 Hard Accountability App<br/>
+        Data stored locally · Crew sync needs Supabase<br/>
+        Build: MVP v1.0
+      </div>
+    </div>
+  );
+}
+
+/* ── SETUP SCREEN ── */
+function SetupScreen({ onComplete }) {
+  const [name, setName] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const today = getETNow().toISOString().split('T')[0];
+  return (
+    <div className="setup">
+      <div className="setup-logo">75<br/><em>HARD</em></div>
+      <p className="setup-sub">Your personal accountability coach.<br/>75 days. No excuses. Let's go.</p>
+      <div className="setup-form">
+        <div className="field-lbl">Your Name</div>
+        <input className="field" placeholder="What should we call you?" value={name}
+          onChange={e => setName(e.target.value)} autoFocus/>
+        <div className="field-lbl" style={{ marginTop:16 }}>Challenge Start Date</div>
+        <input className="field" type="date" value={startDate} max={today}
+          onChange={e => setStartDate(e.target.value)}/>
+        <div className="field-hint">Leave blank to start today</div>
+        <button className="go-btn" style={{ opacity:name.trim()?1:.4 }}
+          onClick={() => name.trim() && onComplete({ name:name.trim(), startDate:startDate||today })}>
+          Start the Challenge
+        </button>
+      </div>
+    </div>
+  );
+}
+
+/* ── TAB ICONS ── */
+const TabIcon = ({ id }) => {
+  if (id==='myday') return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+  );
+  if (id==='crew') return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  );
+  return (
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+    </svg>
+  );
+};
+
+/* ── APP ROOT ── */
+function App() {
+  const [profile,  setProfile]  = useState(() => ls('75h_profile', null));
+  const [progress, setProgress] = useState(() => ls(`75h_prog_${getTodayKey()}`, { workout1:false, workout2:false, waterOz:0, reading:false, cleanEating:false }));
+  const [tab,      setTab]      = useState('myday');
+  const [userName, setUserName] = useState(profile?.name || '');
+
+  // Persist progress
+  useEffect(() => {
+    localStorage.setItem(`75h_prog_${getTodayKey()}`, JSON.stringify(progress));
+  }, [progress]);
+
+  // Persist name
+  useEffect(() => {
+    if (profile) {
+      const updated = { ...profile, name:userName };
+      setProfile(updated);
+      localStorage.setItem('75h_profile', JSON.stringify(updated));
+    }
+  }, [userName]);
+
+  function handleSetup({ name, startDate }) {
+    const p = { name, startDate };
+    setProfile(p); setUserName(name);
+    localStorage.setItem('75h_profile', JSON.stringify(p));
+  }
+
+  function handleReset() {
+    if (window.confirm('Reset all challenge data? This cannot be undone.')) {
+      localStorage.clear(); location.reload();
+    }
+  }
+
+  if (!profile) {
+    return <div className="app"><SetupScreen onComplete={handleSetup}/></div>;
+  }
+
+  const currentDay = getCurrentDay(profile.startDate);
+  const status = getStatus(progress);
+  const TABS = [{ id:'myday', label:'My Day' }, { id:'crew', label:'Crew' }, { id:'settings', label:'Settings' }];
+
+  return (
+    <div className="app">
+      <header className="hdr">
+        <div className="hdr-logo">75 <em>Hard</em></div>
+        <div className="hdr-right">
+          <span className="hdr-name">{userName||'You'}</span>
+          <span className={`pill ${status}`}>{STATUS_LABEL[status]}</span>
+        </div>
+      </header>
+
+      {tab==='myday'    && <MyDayTab progress={progress} setProgress={setProgress} currentDay={currentDay}/>}
+      {tab==='crew'     && <CrewTab  userProgress={progress} userName={userName} currentDay={currentDay}/>}
+      {tab==='settings' && <SettingsTab userName={userName} setUserName={setUserName} currentDay={currentDay} startDate={profile.startDate} onReset={handleReset}/>}
+
+      <nav className="tabbar">
+        {TABS.map(t => (
+          <button key={t.id} className={`tab-btn${tab===t.id?' active':''}`} onClick={() => setTab(t.id)}>
+            <TabIcon id={t.id}/>
+            <span>{t.label}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+
+<script>
+// PWA Manifest
+const manifest = {
+  name:"75 Hard Accountability", short_name:"75 Hard", start_url:"./", display:"standalone",
+  background_color:"#07070d", theme_color:"#07070d",
+  description:"Personal accountability coach and crew progress tracker for 75 Hard.",
+  icons:[{ src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%2307070d'/%3E%3Ctext x='50%25' y='58%25' font-family='Arial Black' font-weight='900' font-size='80' fill='%2300e87a' text-anchor='middle' dominant-baseline='middle'%3E75%3C/text%3E%3C/svg%3E", sizes:"192x192", type:"image/svg+xml", purpose:"any maskable" }]
+};
+const mBlob = new Blob([JSON.stringify(manifest)], { type:'application/json' });
+document.getElementById('pwa-manifest').href = URL.createObjectURL(mBlob);
+
+// Service Worker (offline shell)
+if ('serviceWorker' in navigator) {
+  const sw = `
+    const CACHE='75hard-v1';
+    self.addEventListener('install',e=>{self.skipWaiting()});
+    self.addEventListener('activate',e=>{e.waitUntil(clients.claim())});
+    self.addEventListener('fetch',e=>{
+      e.respondWith(caches.open(CACHE).then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(res=>{
+        if(e.request.method==='GET')c.put(e.request,res.clone());return res;
+      }))));
+    });
+  `;
+  const swBlob = new Blob([sw], { type:'application/javascript' });
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob), { scope:'./' }).catch(()=>{});
+}
+</script>
+</body>
+</html>
