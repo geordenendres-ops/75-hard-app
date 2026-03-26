@@ -37,7 +37,6 @@
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
 #root{height:100%;display:flex;justify-content:center;background:var(--bg)}
-
 .app{width:100%;max-width:430px;height:100%;display:flex;flex-direction:column}
 
 /* HEADER */
@@ -45,8 +44,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .hdr-logo{font-family:'Barlow Condensed',sans-serif;font-size:21px;font-weight:900;letter-spacing:0.04em;text-transform:uppercase}
 .hdr-logo em{color:var(--green);font-style:normal}
 .hdr-right{display:flex;align-items:center;gap:8px}
-.hdr-name{font-size:13px;color:var(--muted);font-weight:500}
-.pill{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+.hdr-name{font-size:13px;color:var(--muted);font-weight:500;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pill{font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:4px 9px;border-radius:20px;flex-shrink:0}
 .pill.on-track{background:var(--green-bg);color:var(--green)}
 .pill.at-risk{background:var(--amber-bg);color:var(--amber);animation:pulse-a 1.8s ease infinite}
 .pill.failed{background:var(--red-bg);color:var(--red);animation:pulse-r 1.8s ease infinite}
@@ -102,7 +101,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .w-btn:active{background:var(--blue-bg);border-color:var(--blue)}
 .w-btn.rst{color:var(--red);font-size:12px}
 
-/* WHAT'S LEFT */
+/* WHATS LEFT */
 .wl-title{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
 .wl-item{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted);padding:3px 0}
 .wl-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);flex-shrink:0}
@@ -117,7 +116,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 /* SECTION LABEL */
 .sec-lbl{font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px;padding-left:2px}
 
-/* CREW */
+/* CREW CARDS */
 .crew-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:11px}
 .crew-name{font-size:16px;font-weight:600;display:flex;align-items:center;gap:6px}
 .you-tag{font-size:9px;background:var(--blue-bg);color:var(--blue);padding:2px 7px;border-radius:10px;font-weight:700;letter-spacing:0.06em}
@@ -128,7 +127,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 /* INVITE */
 .invite{background:var(--surface);border:1px dashed var(--border2);border-radius:var(--r);padding:18px;text-align:center;margin-bottom:10px}
 .invite-sub{font-size:13px;color:var(--muted);margin-bottom:10px}
-.invite-code{background:var(--surface2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:17px;letter-spacing:.18em;color:var(--green);font-weight:700}
+.invite-code{background:var(--surface2);border-radius:8px;padding:10px 14px;font-family:monospace;font-size:20px;letter-spacing:.2em;color:var(--green);font-weight:700}
 .invite-note{font-size:11px;color:var(--dim);margin-top:8px}
 
 /* SETTINGS */
@@ -137,10 +136,8 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .s-row{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 15px;display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
 .s-row-lbl{font-size:15px;font-weight:500}
 .s-row-sub{font-size:11px;color:var(--muted);margin-top:2px}
-.s-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:15px;outline:none;transition:border-color .2s;margin-top:8px}
-.s-input:focus{border-color:var(--green)}
 
-/* SETUP */
+/* SETUP / AUTH */
 .setup{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100%;padding:40px 24px;text-align:center;overflow-y:auto}
 .setup-logo{font-family:'Barlow Condensed',sans-serif;font-size:80px;font-weight:900;letter-spacing:-.02em;line-height:.88;margin-bottom:6px}
 .setup-logo em{color:var(--green);font-style:normal}
@@ -150,8 +147,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .field{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px 15px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:16px;outline:none;transition:border-color .2s;margin-bottom:2px}
 .field:focus{border-color:var(--green)}
 .field-hint{font-size:11px;color:var(--dim);margin-bottom:4px}
-.go-btn{width:100%;background:var(--green);color:#000;border:none;border-radius:var(--r-sm);padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:24px;transition:opacity .15s,transform .1s}
+.go-btn{width:100%;background:var(--green);color:#000;border:none;border-radius:var(--r-sm);padding:16px;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;margin-top:20px;transition:opacity .15s,transform .1s}
 .go-btn:active{opacity:.85;transform:scale(.98)}
+.go-btn.secondary{background:var(--surface);color:var(--text);border:1px solid var(--border2)}
+.err{color:var(--red);font-size:12px;margin-top:8px;padding-left:2px}
+.link-btn{background:none;border:none;color:var(--dim);font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
 
 /* TAB BAR */
 .tabbar{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(7,7,13,0.94);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border);display:flex;padding-bottom:env(safe-area-inset-bottom,10px);height:var(--tab);z-index:100}
@@ -160,32 +160,47 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:'DM San
 .tab-btn svg{width:22px;height:22px}
 .tab-btn span{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 
-/* ANIMS */
+/* SPINNER */
+.spinner{width:32px;height:32px;border:3px solid var(--border2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* REALTIME BADGE */
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;margin-right:5px;animation:blink 2s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .fade-in{animation:fadeUp .28s ease both}
-
 .footer-note{text-align:center;font-size:11px;color:var(--dim);padding:12px 0 4px;line-height:1.9}
 </style>
 </head>
 <body>
 <div id="root"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
 <script type="text/babel">
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
+
+/* ════════════════════════════════════════════════════════
+   ⚠️  PASTE YOUR SUPABASE CREDENTIALS HERE
+════════════════════════════════════════════════════════ */
+const SUPABASE_URL      = 'https://ypiopcvcqhilvostlvri.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_LuI_tn62YhDVr_Pm2dnmMw_3SojkT_a';
+/* ════════════════════════════════════════════════════════ */
+
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 /* ── UTILITIES ── */
-
 function getETNow() {
   return new Date(new Date().toLocaleString('en-US', { timeZone: 'America/New_York' }));
 }
-
 function getTodayKey() {
   const et = getETNow();
   return [et.getFullYear(), String(et.getMonth()+1).padStart(2,'0'), String(et.getDate()).padStart(2,'0')].join('-');
 }
-
 function getCurrentDay(startDate) {
   if (!startDate) return 1;
   const start = new Date(startDate + 'T00:00:00');
@@ -195,19 +210,21 @@ function getCurrentDay(startDate) {
   const diff = Math.round((today - start) / 86400000) + 1;
   return Math.min(Math.max(diff, 1), 75);
 }
-
 function getMinsUntilMidnight() {
   const et = getETNow();
   return (23 - et.getHours()) * 60 + (60 - et.getMinutes()) - 1;
 }
-
+function defaultProgress() {
+  return { workout1:false, workout2:false, water_oz:0, reading:false, clean_eating:false };
+}
 function getPct(p) {
-  const done = [p.workout1, p.workout2, p.waterOz >= 128, p.reading, p.cleanEating].filter(Boolean).length;
+  if (!p) return 0;
+  const done = [p.workout1, p.workout2, (p.water_oz||0) >= 128, p.reading, p.clean_eating].filter(Boolean).length;
   return Math.round((done / 5) * 100);
 }
-
 function getStatus(p) {
-  if (p.workout1 && p.workout2 && p.waterOz >= 128 && p.reading && p.cleanEating) return 'completed';
+  if (!p) return 'on-track';
+  if (p.workout1 && p.workout2 && (p.water_oz||0) >= 128 && p.reading && p.clean_eating) return 'completed';
   const mins = getMinsUntilMidnight();
   let needed = 0;
   if (!p.workout1) needed += 45;
@@ -215,41 +232,216 @@ function getStatus(p) {
   if (!p.reading)  needed += 20;
   if (needed > mins) return 'failed';
   const etH = getETNow().getHours();
-  if (mins < 240 && (needed > 0 || p.waterOz < 128)) return 'at-risk';
-  if (etH >= 18 && (needed > 0 || p.waterOz < 128)) return 'at-risk';
+  if (mins < 240 && (needed > 0 || (p.water_oz||0) < 128)) return 'at-risk';
+  if (etH >= 18   && (needed > 0 || (p.water_oz||0) < 128)) return 'at-risk';
   return 'on-track';
 }
-
+function fmtCountdown(totalMins) {
+  const h = Math.floor(totalMins / 60), m = totalMins % 60;
+  return h > 0 ? `${h}h ${String(m).padStart(2,'0')}m` : `${m}m`;
+}
 const STATUS_LABEL = { 'on-track':'On Track','at-risk':'At Risk','failed':'Failed','completed':'Completed' };
 const STATUS_COLOR = { 'on-track':'var(--green)','at-risk':'var(--amber)','failed':'var(--red)','completed':'var(--green)' };
 
-function fmtCountdown(totalMins) {
-  const h = Math.floor(totalMins / 60), m = totalMins % 60;
-  if (h > 0) return `${h}h ${String(m).padStart(2,'0')}m`;
-  return `${m}m`;
+/* ── LOADING ── */
+function LoadingScreen() {
+  return (
+    <div style={{ display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',height:'100%',gap:20 }}>
+      <div className="setup-logo" style={{ fontSize:60 }}>75<br/><em>HARD</em></div>
+      <div className="spinner"/>
+    </div>
+  );
 }
 
-function ls(key, fallback) {
-  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : fallback; }
-  catch { return fallback; }
+/* ── AUTH — email magic link ── */
+function AuthScreen() {
+  const [email, setEmail]     = useState('');
+  const [sent, setSent]       = useState(false);
+  const [busy, setBusy]       = useState(false);
+  const [error, setError]     = useState('');
+
+  async function send() {
+    if (!email.trim()) return;
+    setBusy(true); setError('');
+    const { error: e } = await sb.auth.signInWithOtp({
+      email: email.trim(),
+      options: { emailRedirectTo: window.location.origin + window.location.pathname }
+    });
+    if (e) { setError(e.message); setBusy(false); }
+    else { setSent(true); setBusy(false); }
+  }
+
+  if (sent) return (
+    <div className="setup">
+      <div className="setup-logo">75<br/><em>HARD</em></div>
+      <p className="setup-sub">
+        Check your email for a sign-in link.<br/>
+        No password needed — just click the link.
+      </p>
+      <div style={{ color:'var(--muted)',fontSize:13 }}>Sent to <strong style={{color:'var(--text)'}}>{email}</strong></div>
+      <div style={{ marginTop:20 }}>
+        <button className="link-btn" onClick={() => setSent(false)}>Try a different email →</button>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="setup">
+      <div className="setup-logo">75<br/><em>HARD</em></div>
+      <p className="setup-sub">Your personal accountability coach.<br/>75 days. No excuses. Let's go.</p>
+      <div className="setup-form">
+        <div className="field-lbl">Your Email</div>
+        <input className="field" type="email" placeholder="you@example.com" value={email}
+          onChange={e => setEmail(e.target.value)}
+          onKeyDown={e => e.key==='Enter' && send()} autoFocus/>
+        <div className="field-hint">We'll send a magic sign-in link — no password needed</div>
+        {error && <div className="err">{error}</div>}
+        <button className="go-btn" style={{ opacity:email.trim()&&!busy?1:.4 }}
+          onClick={send} disabled={!email.trim()||busy}>
+          {busy ? 'Sending…' : 'Send Magic Link'}
+        </button>
+      </div>
+    </div>
+  );
 }
 
-function getCrewData(etHour) {
-  return [
-    { id:'steve',   name:'Steve',   workout1:true,         workout2:etHour>=17,   waterOz:Math.min(128,24+etHour*5), reading:etHour>=19,  cleanEating:true },
-    { id:'madison', name:'Madison', workout1:true,         workout2:true,         waterOz:128,                       reading:true,         cleanEating:true },
-    { id:'kyle',    name:'Kyle',    workout1:etHour>=9,    workout2:false,        waterOz:Math.min(72,etHour*3),     reading:false,        cleanEating:etHour>=11 },
-  ];
+/* ── PROFILE SETUP (first login only) ── */
+function ProfileSetupScreen({ user, onDone }) {
+  const [name, setName]           = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [busy, setBusy]           = useState(false);
+  const [error, setError]         = useState('');
+  const today = getETNow().toISOString().split('T')[0];
+
+  async function save() {
+    if (!name.trim()) return;
+    setBusy(true); setError('');
+    const { data, error: e } = await sb.from('profiles').insert({
+      id: user.id,
+      display_name: name.trim(),
+      challenge_start_date: startDate || today
+    }).select().single();
+    if (e) { setError(e.message); setBusy(false); }
+    else onDone(data);
+  }
+
+  return (
+    <div className="setup">
+      <div className="setup-logo">75<br/><em>HARD</em></div>
+      <p className="setup-sub">Let's set up your challenge.</p>
+      <div className="setup-form">
+        <div className="field-lbl">Your Name</div>
+        <input className="field" placeholder="What should we call you?" value={name}
+          onChange={e => setName(e.target.value)} autoFocus/>
+        <div className="field-lbl" style={{ marginTop:16 }}>Challenge Start Date</div>
+        <input className="field" type="date" value={startDate} max={today}
+          onChange={e => setStartDate(e.target.value)}/>
+        <div className="field-hint">Leave blank to start today</div>
+        {error && <div className="err">{error}</div>}
+        <button className="go-btn" style={{ opacity:name.trim()&&!busy?1:.4 }}
+          onClick={save} disabled={!name.trim()||busy}>
+          {busy ? 'Saving…' : 'Continue →'}
+        </button>
+      </div>
+    </div>
+  );
 }
 
-/* ── CHECK ICON ── */
+/* ── CREW SETUP ── */
+function CrewSetupScreen({ user, onDone }) {
+  const [mode, setMode]             = useState(null); // null | 'create' | 'join'
+  const [crewName, setCrewName]     = useState('');
+  const [code, setCode]             = useState('');
+  const [busy, setBusy]             = useState(false);
+  const [error, setError]           = useState('');
+
+  async function createCrew() {
+    if (!crewName.trim()) return;
+    setBusy(true); setError('');
+    const { data: crew, error: e1 } = await sb.from('crews')
+      .insert({ name: crewName.trim(), created_by: user.id })
+      .select().single();
+    if (e1) { setError(e1.message); setBusy(false); return; }
+    const { error: e2 } = await sb.from('crew_members')
+      .insert({ crew_id: crew.id, user_id: user.id });
+    if (e2) { setError(e2.message); setBusy(false); return; }
+    onDone(crew);
+  }
+
+  async function joinCrew() {
+    if (!code.trim()) return;
+    setBusy(true); setError('');
+    const { data: crew, error: e1 } = await sb.from('crews')
+      .select('*').eq('invite_code', code.trim().toUpperCase()).maybeSingle();
+    if (e1 || !crew) { setError('Crew not found. Double-check the code.'); setBusy(false); return; }
+    // idempotent insert
+    await sb.from('crew_members').upsert({ crew_id: crew.id, user_id: user.id });
+    onDone(crew);
+  }
+
+  if (!mode) return (
+    <div className="setup">
+      <div className="setup-logo">75<br/><em>HARD</em></div>
+      <p className="setup-sub">Accountability is better with a crew.<br/>Create one or join a friend's.</p>
+      <div className="setup-form">
+        <button className="go-btn" style={{ marginTop:0 }} onClick={() => setMode('create')}>Create a Crew</button>
+        <button className="go-btn secondary" onClick={() => setMode('join')}>Join with Invite Code</button>
+        <div style={{ textAlign:'center', marginTop:20 }}>
+          <button className="link-btn" onClick={() => onDone(null)}>Skip for now</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  if (mode === 'create') return (
+    <div className="setup">
+      <div className="setup-logo">75<br/><em>HARD</em></div>
+      <p className="setup-sub">Name your crew.</p>
+      <div className="setup-form">
+        <div className="field-lbl">Crew Name</div>
+        <input className="field" placeholder="e.g. The Grind Squad" value={crewName}
+          onChange={e => setCrewName(e.target.value)} autoFocus/>
+        {error && <div className="err">{error}</div>}
+        <button className="go-btn" style={{ opacity:crewName.trim()&&!busy?1:.4 }}
+          onClick={createCrew} disabled={!crewName.trim()||busy}>
+          {busy ? 'Creating…' : 'Create Crew'}
+        </button>
+        <div style={{ textAlign:'center', marginTop:16 }}>
+          <button className="link-btn" onClick={() => { setMode(null); setError(''); }}>← Back</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="setup">
+      <div className="setup-logo">75<br/><em>HARD</em></div>
+      <p className="setup-sub">Enter the invite code your friend shared.</p>
+      <div className="setup-form">
+        <div className="field-lbl">Invite Code</div>
+        <input className="field" placeholder="XXXXXXXX" value={code}
+          onChange={e => setCode(e.target.value.toUpperCase())} autoFocus
+          style={{ letterSpacing:'.2em', fontFamily:'monospace', fontSize:20 }}/>
+        {error && <div className="err">{error}</div>}
+        <button className="go-btn" style={{ opacity:code.trim()&&!busy?1:.4 }}
+          onClick={joinCrew} disabled={!code.trim()||busy}>
+          {busy ? 'Joining…' : 'Join Crew'}
+        </button>
+        <div style={{ textAlign:'center', marginTop:16 }}>
+          <button className="link-btn" onClick={() => { setMode(null); setError(''); }}>← Back</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── SHARED UI ── */
 const Check = () => (
   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
     <polyline points="20 6 9 17 4 12"/>
   </svg>
 );
 
-/* ── TASK CARD ── */
 function TaskCard({ emoji, name, meta, done, onToggle, delay=0 }) {
   return (
     <div className="card fade-in" style={{ animationDelay:`${delay}ms` }}>
@@ -266,21 +458,15 @@ function TaskCard({ emoji, name, meta, done, onToggle, delay=0 }) {
   );
 }
 
-/* ── WATER CARD ── */
 function WaterCard({ oz, onAdd, onReset }) {
-  const pct = Math.min((oz / 128) * 100, 100);
+  const pct  = Math.min((oz / 128) * 100, 100);
   const done = oz >= 128;
   return (
     <div className="card fade-in" style={{ animationDelay:'80ms', padding:'15px' }}>
       <div className="water-hdr">
-        <div className="water-lhs">
-          <span style={{ fontSize:20 }}>💧</span>
-          <span className="water-title">Water</span>
-        </div>
+        <div className="water-lhs"><span style={{ fontSize:20 }}>💧</span><span className="water-title">Water</span></div>
         <div style={{ textAlign:'right' }}>
-          <div className="water-big" style={{ color:done?'var(--green)':'var(--text)' }}>
-            {oz}<sub> / 128 oz</sub>
-          </div>
+          <div className="water-big" style={{ color:done?'var(--green)':'var(--text)' }}>{oz}<sub> / 128 oz</sub></div>
           <div className="water-rem">{done ? '✓ Goal reached!' : `${128-oz} oz left`}</div>
         </div>
       </div>
@@ -293,7 +479,6 @@ function WaterCard({ oz, onAdd, onReset }) {
   );
 }
 
-/* ── HERO CARD ── */
 function HeroCard({ day, pct, status }) {
   const color = STATUS_COLOR[status];
   return (
@@ -310,14 +495,13 @@ function HeroCard({ day, pct, status }) {
   );
 }
 
-/* ── WHAT'S LEFT ── */
 function WhatsLeft({ p }) {
   const items = [];
-  if (!p.workout1)   items.push('Workout 1 — 45 min');
-  if (!p.workout2)   items.push('Workout 2 — 45 min');
-  if (p.waterOz<128) items.push(`Water — ${128-p.waterOz} oz remaining`);
-  if (!p.reading)    items.push('Reading — 10 pages / 20 min audiobook');
-  if (!p.cleanEating) items.push('Clean Eating & No Bad Habits');
+  if (!p.workout1)         items.push('Workout 1 — 45 min');
+  if (!p.workout2)         items.push('Workout 2 — 45 min');
+  if ((p.water_oz||0)<128) items.push(`Water — ${128-(p.water_oz||0)} oz remaining`);
+  if (!p.reading)          items.push('Reading — 10 pages / 20 min audiobook');
+  if (!p.clean_eating)     items.push('Clean Eating & No Bad Habits');
   return (
     <div className="card fade-in" style={{ padding:'15px', animationDelay:'160ms' }}>
       <div className="wl-title">What's Left Today</div>
@@ -329,7 +513,6 @@ function WhatsLeft({ p }) {
   );
 }
 
-/* ── COUNTDOWN CARD ── */
 function CountdownCard({ status }) {
   const [mins, setMins] = useState(getMinsUntilMidnight());
   useEffect(() => {
@@ -337,7 +520,7 @@ function CountdownCard({ status }) {
     return () => clearInterval(id);
   }, []);
   const color = status==='failed'?'var(--red)':status==='completed'?'var(--green)':'var(--amber)';
-  const msgs = {
+  const msgs  = {
     failed:    '⛔ Not enough time remaining. This day is a loss — reset tomorrow.',
     completed: '✅ Day complete! Enjoy your evening.',
     'at-risk': '⚠️ Getting tight. Finish your remaining tasks now.',
@@ -355,48 +538,50 @@ function CountdownCard({ status }) {
 }
 
 /* ── MY DAY TAB ── */
-function MyDayTab({ progress, setProgress, currentDay }) {
-  const etH = getETNow().getHours();
+function MyDayTab({ progress, onUpdate, currentDay }) {
+  const etH    = getETNow().getHours();
   const status = getStatus(progress);
-  const pct = getPct(progress);
+  const pct    = getPct(progress);
+  const p      = progress;
   return (
     <div className="content">
       <HeroCard day={currentDay} pct={pct} status={status}/>
       <div className="sec-lbl">Daily Tasks</div>
       <TaskCard emoji="🏋️" name="Workout 1" meta="45 minutes · any exercise"
-        done={progress.workout1} onToggle={() => setProgress(p => ({...p, workout1:!p.workout1}))} delay={0}/>
+        done={p.workout1} onToggle={() => onUpdate({...p, workout1:!p.workout1})} delay={0}/>
       <TaskCard emoji="🌿" name="Workout 2" meta="45 minutes · outdoors preferred"
-        done={progress.workout2} onToggle={() => setProgress(p => ({...p, workout2:!p.workout2}))} delay={40}/>
-      <WaterCard oz={progress.waterOz}
-        onAdd={oz => setProgress(p => ({...p, waterOz:p.waterOz+oz}))}
-        onReset={() => setProgress(p => ({...p, waterOz:0}))}/>
+        done={p.workout2} onToggle={() => onUpdate({...p, workout2:!p.workout2})} delay={40}/>
+      <WaterCard oz={p.water_oz||0}
+        onAdd={oz => onUpdate({...p, water_oz:(p.water_oz||0)+oz})}
+        onReset={() => onUpdate({...p, water_oz:0})}/>
       <TaskCard emoji="📖" name="Reading" meta="10 pages or 20 min audiobook · nonfiction only"
-        done={progress.reading} onToggle={() => setProgress(p => ({...p, reading:!p.reading}))} delay={80}/>
+        done={p.reading} onToggle={() => onUpdate({...p, reading:!p.reading})} delay={80}/>
       <TaskCard emoji="🛡️" name="Clean Eating & No Bad Habits" meta="No cheat meals · no alcohol · stay disciplined"
-        done={progress.cleanEating} onToggle={() => setProgress(p => ({...p, cleanEating:!p.cleanEating}))} delay={110}/>
-      <WhatsLeft p={progress}/>
+        done={p.clean_eating} onToggle={() => onUpdate({...p, clean_eating:!p.clean_eating})} delay={110}/>
+      <WhatsLeft p={p}/>
       {etH >= 18 && <CountdownCard status={status}/>}
     </div>
   );
 }
 
-/* ── CREW CARD ── */
+/* ── CREW MEMBER CARD ── */
 function CrewCard({ member, isYou }) {
-  const pct = getPct(member);
-  const status = getStatus(member);
-  const color = STATUS_COLOR[status];
-  const tasks = [
-    { label:'Workout 1',                      done:member.workout1 },
-    { label:'Workout 2',                      done:member.workout2 },
-    { label:`Water ${member.waterOz}/128 oz`, done:member.waterOz>=128 },
-    { label:'Reading',                         done:member.reading },
-    { label:'Clean Eating',                   done:member.cleanEating },
+  const p      = member.progress || defaultProgress();
+  const pct    = getPct(p);
+  const status = getStatus(p);
+  const color  = STATUS_COLOR[status];
+  const tasks  = [
+    { label:'Workout 1',                        done: p.workout1 },
+    { label:'Workout 2',                        done: p.workout2 },
+    { label:`Water ${p.water_oz||0}/128 oz`,    done: (p.water_oz||0) >= 128 },
+    { label:'Reading',                          done: p.reading },
+    { label:'Clean Eating',                     done: p.clean_eating },
   ];
   return (
     <div className="card fade-in" style={{ padding:'15px', borderLeft:`3px solid ${color}` }}>
       <div className="crew-hdr">
         <div className="crew-name">
-          {member.name}
+          {member.display_name}
           {isYou && <span className="you-tag">YOU</span>}
         </div>
         <div style={{ textAlign:'right' }}>
@@ -420,46 +605,114 @@ function CrewCard({ member, isYou }) {
 }
 
 /* ── CREW TAB ── */
-function CrewTab({ userProgress, userName, currentDay }) {
-  const etH = getETNow().getHours();
-  const crew = getCrewData(etH);
-  const me = { id:'you', name:userName||'You', ...userProgress };
-  const all = [me, ...crew].sort((a,b) => getPct(b) - getPct(a));
+function CrewTab({ userId, crew, crewData, currentDay, onRefresh }) {
+  // Subscribe to realtime changes
+  useEffect(() => {
+    if (!crew) return;
+    onRefresh();
+    const channel = sb.channel(`crew-${crew.id}`)
+      .on('postgres_changes', { event:'*', schema:'public', table:'daily_progress' }, () => onRefresh())
+      .subscribe();
+    return () => sb.removeChannel(channel);
+  }, [crew?.id]);
+
+  if (!crew) return (
+    <div className="content">
+      <div style={{ padding:'30px 0', textAlign:'center' }}>
+        <div style={{ fontSize:32, marginBottom:12 }}>👥</div>
+        <div style={{ fontWeight:600, marginBottom:6 }}>No crew yet</div>
+        <div style={{ color:'var(--muted)', fontSize:13 }}>Go to Settings to create or join a crew.</div>
+      </div>
+    </div>
+  );
+
+  const sorted = [...crewData].sort((a,b) => getPct(b.progress||defaultProgress()) - getPct(a.progress||defaultProgress()));
+
   return (
     <div className="content">
       <div style={{ marginBottom:14 }}>
-        <div className="sec-lbl" style={{ margin:0 }}>75 Hard Crew</div>
+        <div className="sec-lbl" style={{ margin:0 }}>
+          <span className="live-dot"/>
+          {crew.name}
+        </div>
         <div style={{ fontSize:12, color:'var(--muted)', marginTop:4 }}>
-          Day {currentDay} · Check back at 5 PM to see who still needs to hustle.
+          Day {currentDay} · Live progress · updates automatically
         </div>
       </div>
-      {all.map(m => <CrewCard key={m.id} member={m} isYou={m.id==='you'}/>)}
-      <div className="invite">
-        <div className="invite-sub">🔗 Invite friends to your crew</div>
-        <div className="invite-code">CREW-7X4M</div>
-        <div className="invite-note">Full multiplayer requires Supabase backend</div>
-      </div>
+      {sorted.length === 0 && (
+        <div className="invite">
+          <div className="invite-sub">No crew members yet.</div>
+          <div className="invite-note" style={{ fontSize:13 }}>Share your invite code from Settings to get people in here.</div>
+        </div>
+      )}
+      {sorted.map(m => <CrewCard key={m.id} member={m} isYou={m.id===userId}/>)}
     </div>
   );
 }
 
 /* ── SETTINGS TAB ── */
-function SettingsTab({ userName, setUserName, currentDay, startDate, onReset }) {
+function SettingsTab({ profile, crew, currentDay, onJoinCrew }) {
+  const [copied, setCopied] = useState(false);
+
+  function copyCode() {
+    if (!crew?.invite_code) return;
+    navigator.clipboard.writeText(crew.invite_code).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }).catch(() => {
+      // Fallback for devices without clipboard API
+      alert(`Your invite code: ${crew.invite_code}`);
+    });
+  }
+
+  async function signOut() {
+    if (window.confirm('Sign out of 75 Hard?')) await sb.auth.signOut();
+  }
+
   return (
     <div className="content">
       <div className="s-section">
         <div className="s-label">Your Profile</div>
-        <div className="s-row" style={{ flexDirection:'column', alignItems:'flex-start', gap:0 }}>
-          <div className="s-row-lbl">Display Name</div>
-          <input className="s-input" value={userName} onChange={e => setUserName(e.target.value)} placeholder="Your name"/>
-        </div>
         <div className="s-row">
           <div>
-            <div className="s-row-lbl">Challenge Day</div>
-            <div className="s-row-sub">Started {startDate || 'today'}</div>
+            <div className="s-row-lbl">{profile?.display_name}</div>
+            <div className="s-row-sub">Started {profile?.challenge_start_date}</div>
           </div>
-          <div style={{ fontFamily:"'Barlow Condensed',sans-serif", fontSize:24, fontWeight:800, color:'var(--green)' }}>{currentDay}</div>
+          <div style={{ fontFamily:"'Barlow Condensed',sans-serif", fontSize:28, fontWeight:900, color:'var(--green)' }}>
+            Day {currentDay}
+          </div>
         </div>
+      </div>
+
+      <div className="s-section">
+        <div className="s-label">Your Crew</div>
+        {crew ? (
+          <>
+            <div className="s-row">
+              <div>
+                <div className="s-row-lbl">{crew.name}</div>
+                <div className="s-row-sub">Share the code below to invite friends</div>
+              </div>
+              <span style={{ fontSize:18 }}>👥</span>
+            </div>
+            <div className="invite" style={{ margin:'0 0 7px' }}>
+              <div className="invite-sub">🔗 Your Crew Invite Code</div>
+              <div className="invite-code">{crew.invite_code}</div>
+              <button onClick={copyCode}
+                style={{ marginTop:12, background:'var(--green)', color:'#000', border:'none', borderRadius:8, padding:'9px 24px', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:"'DM Sans',sans-serif" }}>
+                {copied ? '✓ Copied!' : 'Copy Code'}
+              </button>
+            </div>
+          </>
+        ) : (
+          <div className="s-row" style={{ cursor:'pointer' }} onClick={onJoinCrew}>
+            <div>
+              <div className="s-row-lbl">Create or Join a Crew</div>
+              <div className="s-row-sub">Get accountable with friends</div>
+            </div>
+            <span style={{ color:'var(--green)', fontSize:18 }}>→</span>
+          </div>
+        )}
       </div>
 
       <div className="s-section">
@@ -480,19 +733,19 @@ function SettingsTab({ userName, setUserName, currentDay, startDate, onReset }) 
         </div>
         <div className="s-row">
           <div>
-            <div className="s-row-lbl">Data Storage</div>
-            <div className="s-row-sub">Saved locally on this device</div>
+            <div className="s-row-lbl">Realtime Sync</div>
+            <div className="s-row-sub">Crew progress updates live via Supabase</div>
           </div>
-          <span style={{ fontSize:18 }}>💾</span>
+          <span className="live-dot" style={{ width:8, height:8 }}/>
         </div>
       </div>
 
       <div className="s-section">
-        <div className="s-label">Danger Zone</div>
-        <div className="s-row" style={{ cursor:'pointer' }} onClick={onReset}>
+        <div className="s-label">Account</div>
+        <div className="s-row" style={{ cursor:'pointer' }} onClick={signOut}>
           <div>
-            <div className="s-row-lbl" style={{ color:'var(--red)' }}>Reset Challenge</div>
-            <div className="s-row-sub">Clears all data and starts over</div>
+            <div className="s-row-lbl" style={{ color:'var(--red)' }}>Sign Out</div>
+            <div className="s-row-sub">You'll get a new magic link to sign back in</div>
           </div>
           <span style={{ color:'var(--red)', fontSize:18 }}>→</span>
         </div>
@@ -500,34 +753,7 @@ function SettingsTab({ userName, setUserName, currentDay, startDate, onReset }) 
 
       <div className="footer-note">
         75 Hard Accountability App<br/>
-        Data stored locally · Crew sync needs Supabase<br/>
-        Build: MVP v1.0
-      </div>
-    </div>
-  );
-}
-
-/* ── SETUP SCREEN ── */
-function SetupScreen({ onComplete }) {
-  const [name, setName] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const today = getETNow().toISOString().split('T')[0];
-  return (
-    <div className="setup">
-      <div className="setup-logo">75<br/><em>HARD</em></div>
-      <p className="setup-sub">Your personal accountability coach.<br/>75 days. No excuses. Let's go.</p>
-      <div className="setup-form">
-        <div className="field-lbl">Your Name</div>
-        <input className="field" placeholder="What should we call you?" value={name}
-          onChange={e => setName(e.target.value)} autoFocus/>
-        <div className="field-lbl" style={{ marginTop:16 }}>Challenge Start Date</div>
-        <input className="field" type="date" value={startDate} max={today}
-          onChange={e => setStartDate(e.target.value)}/>
-        <div className="field-hint">Leave blank to start today</div>
-        <button className="go-btn" style={{ opacity:name.trim()?1:.4 }}
-          onClick={() => name.trim() && onComplete({ name:name.trim(), startDate:startDate||today })}>
-          Start the Challenge
-        </button>
+        Powered by Supabase Realtime · v2.0
       </div>
     </div>
   );
@@ -554,45 +780,123 @@ const TabIcon = ({ id }) => {
   );
 };
 
-/* ── APP ROOT ── */
+/* ═══════════════════════════════════════════════
+   APP ROOT
+═══════════════════════════════════════════════ */
 function App() {
-  const [profile,  setProfile]  = useState(() => ls('75h_profile', null));
-  const [progress, setProgress] = useState(() => ls(`75h_prog_${getTodayKey()}`, { workout1:false, workout2:false, waterOz:0, reading:false, cleanEating:false }));
-  const [tab,      setTab]      = useState('myday');
-  const [userName, setUserName] = useState(profile?.name || '');
+  // 'loading' | 'unauthenticated' | 'setup-profile' | 'setup-crew' | 'ready'
+  const [screen,    setScreen]    = useState('loading');
+  const [user,      setUser]      = useState(null);
+  const [profile,   setProfile]   = useState(null);
+  const [crew,      setCrew]      = useState(null);
+  const [progress,  setProgress]  = useState(defaultProgress());
+  const [crewData,  setCrewData]  = useState([]);
+  const [tab,       setTab]       = useState('myday');
+  const saveTimer = useRef(null);
 
-  // Persist progress
+  // ── Auth listener
   useEffect(() => {
-    localStorage.setItem(`75h_prog_${getTodayKey()}`, JSON.stringify(progress));
-  }, [progress]);
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (session) bootstrap(session.user);
+      else setScreen('unauthenticated');
+    });
+    const { data: { subscription } } = sb.auth.onAuthStateChange((_event, session) => {
+      if (session) bootstrap(session.user);
+      else { setUser(null); setProfile(null); setCrew(null); setScreen('unauthenticated'); }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
-  // Persist name
-  useEffect(() => {
-    if (profile) {
-      const updated = { ...profile, name:userName };
-      setProfile(updated);
-      localStorage.setItem('75h_profile', JSON.stringify(updated));
-    }
-  }, [userName]);
+  // ── Load everything for this user
+  async function bootstrap(u) {
+    setUser(u);
 
-  function handleSetup({ name, startDate }) {
-    const p = { name, startDate };
-    setProfile(p); setUserName(name);
-    localStorage.setItem('75h_profile', JSON.stringify(p));
+    // Profile
+    const { data: prof } = await sb.from('profiles').select('*').eq('id', u.id).maybeSingle();
+    if (!prof) { setScreen('setup-profile'); return; }
+    setProfile(prof);
+
+    // Crew membership
+    const { data: mem } = await sb.from('crew_members')
+      .select('crew_id, crews(*)').eq('user_id', u.id).maybeSingle();
+    const c = mem?.crews || null;
+    setCrew(c);
+
+    // Today's progress
+    const { data: prog } = await sb.from('daily_progress')
+      .select('*').eq('user_id', u.id).eq('date', getTodayKey()).maybeSingle();
+    setProgress(prog || defaultProgress());
+
+    // Crew progress
+    if (c) await fetchCrewProgress(c.id);
+
+    setScreen('ready');
   }
 
-  function handleReset() {
-    if (window.confirm('Reset all challenge data? This cannot be undone.')) {
-      localStorage.clear(); location.reload();
-    }
+  // ── Fetch all crew members + their progress for today
+  async function fetchCrewProgress(crewId) {
+    const { data: members } = await sb.from('crew_members')
+      .select('user_id').eq('crew_id', crewId);
+    if (!members?.length) return;
+
+    const ids = members.map(m => m.user_id);
+
+    const [{ data: profiles }, { data: progresses }] = await Promise.all([
+      sb.from('profiles').select('*').in('id', ids),
+      sb.from('daily_progress').select('*').in('user_id', ids).eq('date', getTodayKey())
+    ]);
+
+    const combined = (profiles || []).map(p => ({
+      ...p,
+      progress: (progresses || []).find(pr => pr.user_id === p.id) || defaultProgress()
+    }));
+    setCrewData(combined);
   }
 
-  if (!profile) {
-    return <div className="app"><SetupScreen onComplete={handleSetup}/></div>;
+  // ── Save progress to Supabase (debounced 800ms)
+  async function handleUpdate(newProg) {
+    setProgress(newProg);
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(async () => {
+      await sb.from('daily_progress').upsert({
+        user_id:         user.id,
+        date:            getTodayKey(),
+        workout1:        newProg.workout1,
+        workout2:        newProg.workout2,
+        water_oz:        newProg.water_oz || 0,
+        reading:         newProg.reading,
+        clean_eating:    newProg.clean_eating,
+        completion_pct:  getPct(newProg),
+        day_status:      getStatus(newProg),
+        updated_at:      new Date().toISOString()
+      }, { onConflict: 'user_id,date' });
+    }, 800);
   }
 
-  const currentDay = getCurrentDay(profile.startDate);
-  const status = getStatus(progress);
+  // ── After crew setup
+  async function onCrewDone(newCrew) {
+    setCrew(newCrew);
+    if (newCrew) await fetchCrewProgress(newCrew.id);
+    setScreen('ready');
+  }
+
+  // ── Screens
+  if (screen === 'loading')       return <div className="app"><LoadingScreen/></div>;
+  if (screen === 'unauthenticated') return <div className="app"><AuthScreen/></div>;
+  if (screen === 'setup-profile') return (
+    <div className="app">
+      <ProfileSetupScreen user={user} onDone={p => { setProfile(p); setScreen('setup-crew'); }}/>
+    </div>
+  );
+  if (screen === 'setup-crew') return (
+    <div className="app">
+      <CrewSetupScreen user={user} onDone={onCrewDone}/>
+    </div>
+  );
+
+  // ── Main app
+  const currentDay = getCurrentDay(profile?.challenge_start_date);
+  const status     = getStatus(progress);
   const TABS = [{ id:'myday', label:'My Day' }, { id:'crew', label:'Crew' }, { id:'settings', label:'Settings' }];
 
   return (
@@ -600,14 +904,22 @@ function App() {
       <header className="hdr">
         <div className="hdr-logo">75 <em>Hard</em></div>
         <div className="hdr-right">
-          <span className="hdr-name">{userName||'You'}</span>
+          <span className="hdr-name">{profile?.display_name}</span>
           <span className={`pill ${status}`}>{STATUS_LABEL[status]}</span>
         </div>
       </header>
 
-      {tab==='myday'    && <MyDayTab progress={progress} setProgress={setProgress} currentDay={currentDay}/>}
-      {tab==='crew'     && <CrewTab  userProgress={progress} userName={userName} currentDay={currentDay}/>}
-      {tab==='settings' && <SettingsTab userName={userName} setUserName={setUserName} currentDay={currentDay} startDate={profile.startDate} onReset={handleReset}/>}
+      {tab==='myday' && (
+        <MyDayTab progress={progress} onUpdate={handleUpdate} currentDay={currentDay}/>
+      )}
+      {tab==='crew' && (
+        <CrewTab userId={user.id} crew={crew} crewData={crewData} currentDay={currentDay}
+          onRefresh={() => crew && fetchCrewProgress(crew.id)}/>
+      )}
+      {tab==='settings' && (
+        <SettingsTab profile={profile} crew={crew} currentDay={currentDay}
+          onJoinCrew={() => setScreen('setup-crew')}/>
+      )}
 
       <nav className="tabbar">
         {TABS.map(t => (
@@ -629,26 +941,27 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 const manifest = {
   name:"75 Hard Accountability", short_name:"75 Hard", start_url:"./", display:"standalone",
   background_color:"#07070d", theme_color:"#07070d",
-  description:"Personal accountability coach and crew progress tracker for 75 Hard.",
+  description:"Personal accountability coach and crew tracker for 75 Hard.",
   icons:[{ src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%2307070d'/%3E%3Ctext x='50%25' y='58%25' font-family='Arial Black' font-weight='900' font-size='80' fill='%2300e87a' text-anchor='middle' dominant-baseline='middle'%3E75%3C/text%3E%3C/svg%3E", sizes:"192x192", type:"image/svg+xml", purpose:"any maskable" }]
 };
-const mBlob = new Blob([JSON.stringify(manifest)], { type:'application/json' });
+const mBlob = new Blob([JSON.stringify(manifest)], {type:'application/json'});
 document.getElementById('pwa-manifest').href = URL.createObjectURL(mBlob);
 
-// Service Worker (offline shell)
+// Service Worker — skip Supabase calls from cache
 if ('serviceWorker' in navigator) {
   const sw = `
-    const CACHE='75hard-v1';
+    const CACHE='75hard-v2';
     self.addEventListener('install',e=>{self.skipWaiting()});
     self.addEventListener('activate',e=>{e.waitUntil(clients.claim())});
     self.addEventListener('fetch',e=>{
+      if(e.request.url.includes('supabase.co')||e.request.url.includes('fonts.g'))return;
       e.respondWith(caches.open(CACHE).then(c=>c.match(e.request).then(r=>r||fetch(e.request).then(res=>{
         if(e.request.method==='GET')c.put(e.request,res.clone());return res;
       }))));
     });
   `;
-  const swBlob = new Blob([sw], { type:'application/javascript' });
-  navigator.serviceWorker.register(URL.createObjectURL(swBlob), { scope:'./' }).catch(()=>{});
+  const swBlob = new Blob([sw],{type:'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(swBlob),{scope:'./'}).catch(()=>{});
 }
 </script>
 </body>
