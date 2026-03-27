@@ -651,8 +651,11 @@ function CrewTab({ userId, crew, crewData, currentDay, onRefresh }) {
 }
 
 /* ── SETTINGS TAB ── */
-function SettingsTab({ profile, crew, currentDay, onJoinCrew }) {
-  const [copied, setCopied] = useState(false);
+function SettingsTab({ profile, crew, currentDay, onJoinCrew, onRestartChallenge }) {
+  const [copied, setCopied]         = useState(false);
+  const [editingDate, setEditingDate] = useState(false);
+  const [newDate, setNewDate]       = useState(profile?.challenge_start_date || '');
+  const [savingDate, setSavingDate] = useState(false);
 
   function copyCode() {
     if (!crew?.invite_code) return;
@@ -660,27 +663,66 @@ function SettingsTab({ profile, crew, currentDay, onJoinCrew }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }).catch(() => {
-      // Fallback for devices without clipboard API
       alert(`Your invite code: ${crew.invite_code}`);
     });
+  }
+
+  async function saveDate() {
+    if (!newDate) return;
+    setSavingDate(true);
+    await sb.from('profiles').update({ challenge_start_date: newDate }).eq('id', profile.id);
+    profile.challenge_start_date = newDate;
+    setEditingDate(false);
+    setSavingDate(false);
+    window.location.reload();
   }
 
   async function signOut() {
     if (window.confirm('Sign out of 75 Hard?')) await sb.auth.signOut();
   }
 
+  const today = getETNow().toISOString().split('T')[0];
+
   return (
     <div className="content">
       <div className="s-section">
         <div className="s-label">Your Profile</div>
-        <div className="s-row">
-          <div>
-            <div className="s-row-lbl">{profile?.display_name}</div>
-            <div className="s-row-sub">Started {profile?.challenge_start_date}</div>
+        <div className="s-row" style={{ flexDirection:'column', alignItems:'flex-start', gap:6 }}>
+          <div style={{ display:'flex', justifyContent:'space-between', width:'100%', alignItems:'center' }}>
+            <div>
+              <div className="s-row-lbl">{profile?.display_name}</div>
+              <div className="s-row-sub">Day {currentDay} of 75</div>
+            </div>
+            <div style={{ fontFamily:"'Barlow Condensed',sans-serif", fontSize:28, fontWeight:900, color:'var(--green)' }}>
+              Day {currentDay}
+            </div>
           </div>
-          <div style={{ fontFamily:"'Barlow Condensed',sans-serif", fontSize:28, fontWeight:900, color:'var(--green)' }}>
-            Day {currentDay}
-          </div>
+          {editingDate ? (
+            <div style={{ width:'100%', display:'flex', flexDirection:'column', gap:8 }}>
+              <div style={{ fontSize:11, color:'var(--muted)', fontWeight:600, letterSpacing:'.08em', textTransform:'uppercase' }}>Challenge Start Date</div>
+              <input type="date" value={newDate} max={today}
+                onChange={e => setNewDate(e.target.value)}
+                style={{ background:'var(--surface2)', border:'1px solid var(--green)', borderRadius:8, padding:'10px 12px', color:'var(--text)', fontSize:15, fontFamily:"'DM Sans',sans-serif", width:'100%', outline:'none' }}/>
+              <div style={{ display:'flex', gap:8 }}>
+                <button onClick={saveDate} disabled={savingDate}
+                  style={{ flex:1, background:'var(--green)', color:'#000', border:'none', borderRadius:8, padding:'10px', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:"'DM Sans',sans-serif" }}>
+                  {savingDate ? 'Saving…' : 'Save Date'}
+                </button>
+                <button onClick={() => setEditingDate(false)}
+                  style={{ flex:1, background:'var(--surface2)', color:'var(--muted)', border:'1px solid var(--border)', borderRadius:8, padding:'10px', fontWeight:700, fontSize:13, cursor:'pointer', fontFamily:"'DM Sans',sans-serif" }}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div style={{ display:'flex', justifyContent:'space-between', width:'100%', alignItems:'center' }}>
+              <div className="s-row-sub">Started {profile?.challenge_start_date}</div>
+              <button onClick={() => setEditingDate(true)}
+                style={{ background:'none', border:'1px solid var(--border2)', borderRadius:6, padding:'4px 10px', color:'var(--muted)', fontSize:11, cursor:'pointer', fontFamily:"'DM Sans',sans-serif", fontWeight:600 }}>
+                Change
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
@@ -741,7 +783,14 @@ function SettingsTab({ profile, crew, currentDay, onJoinCrew }) {
       </div>
 
       <div className="s-section">
-        <div className="s-label">Account</div>
+        <div className="s-label">Danger Zone</div>
+        <div className="s-row" style={{ cursor:'pointer' }} onClick={onRestartChallenge}>
+          <div>
+            <div className="s-row-lbl" style={{ color:'var(--amber)' }}>Restart Challenge</div>
+            <div className="s-row-sub">Resets your start date to today and clears today's progress</div>
+          </div>
+          <span style={{ color:'var(--amber)', fontSize:18 }}>↺</span>
+        </div>
         <div className="s-row" style={{ cursor:'pointer' }} onClick={signOut}>
           <div>
             <div className="s-row-lbl" style={{ color:'var(--red)' }}>Sign Out</div>
@@ -873,6 +922,20 @@ function App() {
     }, 800);
   }
 
+  // ── Restart challenge
+  async function handleRestartChallenge() {
+    if (!window.confirm('Restart your 75 Hard challenge? This resets your start date to today and clears today\'s progress. Your crew stays the same.')) return;
+    const today = getTodayKey();
+    await Promise.all([
+      sb.from('profiles').update({ challenge_start_date: today }).eq('id', user.id),
+      sb.from('daily_progress').delete().eq('user_id', user.id).eq('date', today)
+    ]);
+    setProgress(defaultProgress());
+    setProfile(p => ({ ...p, challenge_start_date: today }));
+    setTab('myday');
+    window.alert('Challenge restarted! Day 1 begins today. 💪');
+  }
+
   // ── After crew setup
   async function onCrewDone(newCrew) {
     setCrew(newCrew);
@@ -918,7 +981,8 @@ function App() {
       )}
       {tab==='settings' && (
         <SettingsTab profile={profile} crew={crew} currentDay={currentDay}
-          onJoinCrew={() => setScreen('setup-crew')}/>
+          onJoinCrew={() => setScreen('setup-crew')}
+          onRestartChallenge={handleRestartChallenge}/>
       )}
 
       <nav className="tabbar">
