@@ -159,10 +159,8 @@ html{height:100%;background:var(--bg)}body{height:100%;background:var(--bg);colo
 .tabbar{
   position:fixed;
   bottom:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:100%;
-  max-width:430px;
+  left:0;
+  right:0;
   background:rgba(7,7,13,0.94);
   backdrop-filter:blur(24px);
   -webkit-backdrop-filter:blur(24px);
@@ -177,9 +175,9 @@ html{height:100%;background:var(--bg)}body{height:100%;background:var(--bg);colo
   height:54px;
 }
 .tabbar-safe{
-  height:env(safe-area-inset-bottom, 0px);
   width:100%;
-  min-height:0;
+  background:rgba(7,7,13,0.94);
+  flex-shrink:0;
 }
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:none;border:none;color:var(--dim);transition:color .15s;font-family:'DM Sans',sans-serif;height:54px}
 .tab-btn.active{color:var(--green)}
@@ -202,29 +200,23 @@ html{height:100%;background:var(--bg)}body{height:100%;background:var(--bg);colo
 <body>
 <div id="root"></div>
 <script>
-// Run immediately before React loads — sets exact pixel values for this device
 (function(){
-  var isStandalone = window.navigator.standalone === true;
-  var safeBottom = 0;
-  // On iPhone, safe area is typically 34px on models with home indicator
-  // We detect by checking if the device has a notch/home indicator
-  if(isStandalone){
-    safeBottom = 34; // default for home indicator iPhones
-    // Try to get the real value
-    var testEl = document.createElement('div');
-    testEl.style.cssText = 'position:fixed;bottom:0;height:env(safe-area-inset-bottom,0px);width:1px;visibility:hidden;';
-    document.body.appendChild(testEl);
-    var realSafe = parseInt(window.getComputedStyle(testEl).height) || 34;
-    document.body.removeChild(testEl);
-    safeBottom = realSafe > 0 ? realSafe : 34;
+  // Every modern iPhone (X and later) has exactly 34px home indicator
+  // Older iPhones with home button have 0px
+  // We detect by screen height — home indicator iPhones are taller
+  var hasHomeIndicator = window.screen.height >= 812 || window.screen.width >= 812;
+  var safe = hasHomeIndicator ? 34 : 0;
+
+  function applyLayout() {
+    var safeDiv = document.querySelector('.tabbar-safe');
+    if (safeDiv) safeDiv.style.height = safe + 'px';
+    var content = document.querySelector('.content');
+    if (content) content.style.paddingBottom = (54 + safe + 20) + 'px';
   }
-  // Inject exact pixel styles
-  var style = document.createElement('style');
-  style.textContent = [
-    '.tabbar { padding-bottom: ' + safeBottom + 'px !important; }',
-    '.content { padding-bottom: ' + (54 + safeBottom + 20) + 'px !important; }'
-  ].join('');
-  document.head.appendChild(style);
+
+  document.addEventListener('DOMContentLoaded', applyLayout);
+  setTimeout(applyLayout, 100);
+  setTimeout(applyLayout, 600);
 })();
 </script>
 
