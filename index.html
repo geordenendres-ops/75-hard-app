@@ -253,34 +253,62 @@ function LoadingScreen() {
   );
 }
 
-/* ── AUTH — email magic link ── */
+/* ── AUTH — OTP code (stays inside PWA, no redirect) ── */
 function AuthScreen() {
-  const [email, setEmail]     = useState('');
-  const [sent, setSent]       = useState(false);
-  const [busy, setBusy]       = useState(false);
-  const [error, setError]     = useState('');
+  const [email, setEmail] = useState('');
+  const [code,  setCode]  = useState('');
+  const [step,  setStep]  = useState('email'); // 'email' | 'code'
+  const [busy,  setBusy]  = useState(false);
+  const [error, setError] = useState('');
 
-  async function send() {
+  async function sendCode() {
     if (!email.trim()) return;
     setBusy(true); setError('');
     const { error: e } = await sb.auth.signInWithOtp({
       email: email.trim(),
-      options: { emailRedirectTo: window.location.origin + window.location.pathname }
+      options: { shouldCreateUser: true }
     });
     if (e) { setError(e.message); setBusy(false); }
-    else { setSent(true); setBusy(false); }
+    else { setStep('code'); setBusy(false); }
   }
 
-  if (sent) return (
+  async function verifyCode() {
+    if (!code.trim()) return;
+    setBusy(true); setError('');
+    const { error: e } = await sb.auth.verifyOtp({
+      email: email.trim(),
+      token: code.trim(),
+      type: 'email'
+    });
+    if (e) { setError('Invalid code. Check your email and try again.'); setBusy(false); }
+    // on success the onAuthStateChange listener in App handles the rest
+  }
+
+  if (step === 'code') return (
     <div className="setup">
       <div className="setup-logo">75<br/><em>HARD</em></div>
       <p className="setup-sub">
-        Check your email for a sign-in link.<br/>
-        No password needed — just click the link.
+        We sent a 6-digit code to<br/>
+        <strong style={{ color:'var(--text)' }}>{email}</strong>
       </p>
-      <div style={{ color:'var(--muted)',fontSize:13 }}>Sent to <strong style={{color:'var(--text)'}}>{email}</strong></div>
-      <div style={{ marginTop:20 }}>
-        <button className="link-btn" onClick={() => setSent(false)}>Try a different email →</button>
+      <div className="setup-form">
+        <div className="field-lbl">Enter your code</div>
+        <input className="field" type="number" placeholder="123456" value={code}
+          onChange={e => setCode(e.target.value)}
+          onKeyDown={e => e.key==='Enter' && verifyCode()}
+          style={{ letterSpacing:'.3em', fontSize:28, textAlign:'center', fontFamily:"'Barlow Condensed',sans-serif", fontWeight:700 }}
+          autoFocus/>
+        <div className="field-hint">Check your email — code expires in 10 minutes</div>
+        {error && <div className="err">{error}</div>}
+        <button className="go-btn" style={{ opacity:code.trim()&&!busy?1:.4 }}
+          onClick={verifyCode} disabled={!code.trim()||busy}>
+          {busy ? 'Verifying…' : 'Sign In →'}
+        </button>
+        <div style={{ textAlign:'center', marginTop:16 }}>
+          <button className="link-btn" onClick={() => { setStep('email'); setCode(''); setError(''); }}>
+            ← Use a different email
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -293,12 +321,12 @@ function AuthScreen() {
         <div className="field-lbl">Your Email</div>
         <input className="field" type="email" placeholder="you@example.com" value={email}
           onChange={e => setEmail(e.target.value)}
-          onKeyDown={e => e.key==='Enter' && send()} autoFocus/>
-        <div className="field-hint">We'll send a magic sign-in link — no password needed</div>
+          onKeyDown={e => e.key==='Enter' && sendCode()} autoFocus/>
+        <div className="field-hint">We'll send a 6-digit code — no password, no redirects</div>
         {error && <div className="err">{error}</div>}
         <button className="go-btn" style={{ opacity:email.trim()&&!busy?1:.4 }}
-          onClick={send} disabled={!email.trim()||busy}>
-          {busy ? 'Sending…' : 'Send Magic Link'}
+          onClick={sendCode} disabled={!email.trim()||busy}>
+          {busy ? 'Sending…' : 'Send Code'}
         </button>
       </div>
     </div>
@@ -794,7 +822,7 @@ function SettingsTab({ profile, crew, currentDay, onJoinCrew, onRestartChallenge
         <div className="s-row" style={{ cursor:'pointer' }} onClick={signOut}>
           <div>
             <div className="s-row-lbl" style={{ color:'var(--red)' }}>Sign Out</div>
-            <div className="s-row-sub">You'll get a new magic link to sign back in</div>
+            <div className="s-row-sub">You'll get a new 6-digit code to sign back in</div>
           </div>
           <span style={{ color:'var(--red)', fontSize:18 }}>→</span>
         </div>
