@@ -164,11 +164,13 @@ html{height:100%;background:var(--bg)}body{height:100%;background:var(--bg);colo
   border-top:1px solid var(--border);
   display:flex;align-items:flex-start;
   padding-top:10px;
-  padding-bottom:34px;
+  padding-bottom:0px;
   z-index:100;
 }
-@supports(padding-bottom: env(safe-area-inset-bottom)){
-  .tabbar{padding-bottom:max(env(safe-area-inset-bottom),20px)}
+/* PWA standalone mode — no URL bar, need extra bottom padding */
+@media all and (display-mode: standalone){
+  .tabbar{padding-bottom:34px}
+  .content{padding-bottom:120px}
 }
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;cursor:pointer;background:none;border:none;color:var(--dim);transition:color .15s;font-family:'DM Sans',sans-serif}
 .tab-btn.active{color:var(--green)}
