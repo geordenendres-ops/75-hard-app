@@ -201,6 +201,32 @@ html{height:100%;background:var(--bg)}body{height:100%;background:var(--bg);colo
 </head>
 <body>
 <div id="root"></div>
+<script>
+// Run immediately before React loads — sets exact pixel values for this device
+(function(){
+  var isStandalone = window.navigator.standalone === true;
+  var safeBottom = 0;
+  // On iPhone, safe area is typically 34px on models with home indicator
+  // We detect by checking if the device has a notch/home indicator
+  if(isStandalone){
+    safeBottom = 34; // default for home indicator iPhones
+    // Try to get the real value
+    var testEl = document.createElement('div');
+    testEl.style.cssText = 'position:fixed;bottom:0;height:env(safe-area-inset-bottom,0px);width:1px;visibility:hidden;';
+    document.body.appendChild(testEl);
+    var realSafe = parseInt(window.getComputedStyle(testEl).height) || 34;
+    document.body.removeChild(testEl);
+    safeBottom = realSafe > 0 ? realSafe : 34;
+  }
+  // Inject exact pixel styles
+  var style = document.createElement('style');
+  style.textContent = [
+    '.tabbar { padding-bottom: ' + safeBottom + 'px !important; }',
+    '.content { padding-bottom: ' + (54 + safeBottom + 20) + 'px !important; }'
+  ].join('');
+  document.head.appendChild(style);
+})();
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
