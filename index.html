@@ -56,7 +56,7 @@ html{height:100%;background:var(--bg)}body{height:100%;background:var(--bg);colo
 @keyframes pulse-r{0%,100%{opacity:1}50%{opacity:.55}}
 
 /* SCROLL */
-.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px 120px;scrollbar-width:none}
+.content{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(56px + var(--safe-bottom, 0px) + 24px);scrollbar-width:none}
 .content::-webkit-scrollbar{display:none}
 
 /* CARDS */
@@ -164,13 +164,8 @@ html{height:100%;background:var(--bg)}body{height:100%;background:var(--bg);colo
   border-top:1px solid var(--border);
   display:flex;align-items:flex-start;
   padding-top:10px;
-  padding-bottom:0px;
+  padding-bottom:var(--safe-bottom, 0px);
   z-index:100;
-}
-/* PWA standalone mode — no URL bar, need extra bottom padding */
-@media all and (display-mode: standalone){
-  .tabbar{padding-bottom:34px}
-  .content{padding-bottom:120px}
 }
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;cursor:pointer;background:none;border:none;color:var(--dim);transition:color .15s;font-family:'DM Sans',sans-serif}
 .tab-btn.active{color:var(--green)}
@@ -1046,6 +1041,31 @@ ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
 </script>
 
 <script>
+// Detect safe area and set CSS variable precisely
+(function() {
+  function setSafeArea() {
+    // Create a test div to measure the real safe area
+    const el = document.createElement('div');
+    el.style.cssText = 'position:fixed;bottom:0;left:0;right:0;height:env(safe-area-inset-bottom,0px);pointer-events:none;opacity:0;';
+    document.body.appendChild(el);
+    const h = el.getBoundingClientRect().height;
+    document.body.removeChild(el);
+    
+    // In standalone PWA mode, window.innerHeight vs screen gives us the real gap
+    const isPWA = window.navigator.standalone === true;
+    let bottomPad = 0;
+    if (isPWA) {
+      // Use the screen height minus the usable height to find the gap
+      const gap = window.screen.height - window.innerHeight - (window.screenTop || 0);
+      bottomPad = Math.max(h, isPWA ? 34 : 0);
+    }
+    document.documentElement.style.setProperty('--safe-bottom', bottomPad + 'px');
+    document.documentElement.style.setProperty('--content-bottom', (56 + bottomPad + 20) + 'px');
+  }
+  setSafeArea();
+  window.addEventListener('resize', setSafeArea);
+})();
+
 // PWA Manifest
 const manifest = {
   name:"75 Hard Accountability", short_name:"75 Hard", start_url:"./", display:"standalone",
